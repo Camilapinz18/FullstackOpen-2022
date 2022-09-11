@@ -1,0 +1,6 @@
+note over browser: Send button clicked
+note over browser: Register an EventHandler with an e.preventDefault() in the function to prevent to create a new HTTP GET
+note over browser: It renders the note
+browser->server: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+note over server: Server gets the .json file with the text and date
+server-->browser: Status code: 201 created
