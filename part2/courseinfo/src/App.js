@@ -1,19 +1,33 @@
 import React from 'react';
-const Total = ({ sum }) => <p>Number of exercises {sum}</p>
+const Total = ({ sum }) => {
+  <div>
 
-const Part = ({part}) => {
-  return (
-<div>
-      {console.log("idPart:",part.id)}
-      {part.name} {part.exercises}
-</div>
-  )
+
+
+  </div>
+
 }
 
-const Content = ({partInfo}) => { //recibe un course.parts
+const Part = ({ part }) => {
   return (
     <div>
-      {partInfo.map((part) => <Part key={partInfo.id} part={part} />)}
+      {console.log("idPart:", part.id)}
+      {part.name} {part.exercises} 
+
+    </div>
+  )
+
+  
+}
+
+const Content = ({ partInfo }) => { //recibe un course.parts
+
+  let numbers
+  return (
+    <div>
+      {partInfo.map((part) => <Part key={part.id} part={part} />)}
+      {numbers=partInfo.map((number) => partInfo.exercises)}
+      {console.log(numbers)}
     </div>
   )
 }
@@ -57,6 +71,11 @@ const App = () => {
         name: 'State of a component',
         exercises: 14,
         id: 3
+      },
+      {
+        name: 'Redux',
+        exercises: 11,
+        id:4
       }
     ]
   }
