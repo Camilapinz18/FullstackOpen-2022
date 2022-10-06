@@ -18,7 +18,6 @@ const Part = ({ part }) => {
 }
 
 const Content = ({ partInfo }) => { //recibe un course.parts
-  let numbers
   return (
     <div>
       {partInfo.map((part) => <Part key={part.id} part={part} />)}
@@ -43,9 +42,7 @@ const Header = ({ courseName }) => {
       <h1>{courseName}</h1>
     </div>
   )
-
 }
-
 
 const App = () => {
   const course = {
