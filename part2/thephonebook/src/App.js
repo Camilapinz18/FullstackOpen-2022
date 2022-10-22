@@ -2,9 +2,17 @@ import { useState } from "react";
 import Name from './Components/Name'
 
 const App = () => {
-  const [persons, setPersons] = useState([{ name: 'PEKKA OLKKONEN', number: '300666'}])
+  const [persons, setPersons] = useState([{ name: 'Arto Hellas', number: '040-123456'},
+  { name: 'Ada Lovelace', number: '39-44-5323523'},
+  { name: 'Dan Abramov', number: '12-43-234345'},
+  { name: 'Mary Poppendieck', number: '39-23-6423122'}
+])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [newSearch, setNewSearch] = useState('')
+  const [showSearch, setShowSearch]=useState(true)
+
+  
 
   const handleNameChange = (event) => {
     //console.log(event.target.value)
@@ -14,8 +22,24 @@ const App = () => {
   const handleNumberChange = (event) => {
     console.log('Number: ',event.target.value)
     setNewNumber(event.target.value)
+  }
+
+  const handleNewSearch = (event) => {
+    console.log('Search: ',event.target.value.toUpperCase())
+    setNewSearch(event.target.value.toUpperCase())
+
+
+    const result=persons.filter(person=>JSON.stringify(person.name.charAt(0))===JSON.stringify(newSearch.charAt(0)))
+    console.log('result: ',result)
+
+    result? setShowSearch(true):setShowSearch(false)
+    console.log("Show search: ",showSearch)
+
+    const namesToShow=showSearch? persons:result
 
   }
+
+ 
 
   const addName = (event) => {
     event.preventDefault()
@@ -45,6 +69,11 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <div>
+        Filter shown with <input value={newSearch} onChange={(handleNewSearch)}/>
+      </div>
+
+      <h3>Add a new</h3>
       <form onSubmit={addName}>
         <div>
           name:<input value={newName} onChange={handleNameChange} />
@@ -57,8 +86,9 @@ const App = () => {
         </div>
       </form>
 
-      <h2>Numbers</h2>
+      <h3>Numbers</h3>
       <ul>
+
         {persons.map(person => <Name key={person.name} name={person.name} number={person.number}/>)}
       </ul>
     </div>
