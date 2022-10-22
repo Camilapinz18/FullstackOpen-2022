@@ -2,11 +2,11 @@ import { useState } from "react";
 import Name from './Components/Name'
 
 const App = () => {
-  const [persons, setPersons] = useState([{ name: 'Pekka Olkkonen' }])
+  const [persons, setPersons] = useState([{ name: 'PEKKA OLKKONEN' }])
   const [newName, setNewName] = useState('')
 
   const handleNameChange = (event) => {
-    console.log(event.target.value)
+    //console.log(event.target.value)
     setNewName(event.target.value)
   }
 
@@ -15,20 +15,22 @@ const App = () => {
     console.log('button clickd', event.target)
 
     const nameObject = {
-      name: newName
+      name: newName.toUpperCase()
     }
 
-    const checkName = () => {
-      persons.map(person => (JSON.stringify(person.name) === JSON.stringify(newName)) ? : setPersons(persons.concat(nameObject)))
-      console.log("Not added")
+    let duplicated = {
+      name: ''
     }
 
+    //El nombre debe compararse con los nombres ya almacenados en persons:
+    //Recorre persons, y convierte cada valor en un JSON y lo compara con el newName convertido a JSON tambien
 
-    checkName()
+    duplicated = persons.find(person => (JSON.stringify(person) === JSON.stringify(nameObject)))
+    console.log('Duplicated:', duplicated)
+    console.log('nameObject: ', JSON.stringify(nameObject))
+
+    duplicated ? alert(`${newName} is already added to phonebook`) : setPersons(persons.concat(nameObject))
     setNewName('')
-
-
-
   }
 
   return (
