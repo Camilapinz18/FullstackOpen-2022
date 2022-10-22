@@ -18,8 +18,17 @@ const App = () => {
       name: newName
     }
 
-    setPersons(persons.concat(nameObject))
+    const checkName = () => {
+      persons.map(person => (JSON.stringify(person.name) === JSON.stringify(newName)) ? : setPersons(persons.concat(nameObject)))
+      console.log("Not added")
+    }
+
+
+    checkName()
     setNewName('')
+
+
+
   }
 
   return (
@@ -36,7 +45,7 @@ const App = () => {
 
       <h2>Numbers</h2>
       <ul>
-        {persons.map(person => <Name key={person.name} name={person.name}/>)}
+        {persons.map(person => <Name key={person.name} name={person.name} />)}
       </ul>
     </div>
   )
