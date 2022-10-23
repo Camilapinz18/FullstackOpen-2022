@@ -1,10 +1,10 @@
 import React from "react"
 
-const Name=({name,number})=>{
+const Person=({name,number})=>{
     return(
       <li>{name} {number}</li>
     )
   }
 
-  export default Name;
+  export default Person;
   
