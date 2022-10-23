@@ -5,20 +5,19 @@ import Persons from './Components/Persons'
 
 const App = () => {
   const [persons, setPersons] = useState([
-  { name: 'LORENA SAAVEDRA', number: '040-123456'},
-  { name: 'MARIA PINZON', number: '39-44-5323523'},
-  { name: 'ALVARO PEREZ', number: '12-43-234345'},
-  { name: 'ESTEBAN ARBELAEZ', number: '39-54-459713'},
-  { name: 'LAURA MORENO', number: '76-87-967450'},
-  { name: 'ANA CASAS', number: '34-23-034791'},
-  { name: 'XIOMARA USUGA', number: '12-12-780345'}
+    { name: 'LORENA SAAVEDRA', number: '040-123456' },
+    { name: 'MARIA PINZON', number: '39-44-5323523' },
+    { name: 'ALVARO PEREZ', number: '12-43-234345' },
+    { name: 'ESTEBAN ARBELAEZ', number: '39-54-459713' },
+    { name: 'LAURA MORENO', number: '76-87-967450' },
+    { name: 'ANA CASAS', number: '34-23-034791' },
+    { name: 'XIOMARA USUGA', number: '12-12-780345' }
   ])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
   const [personsToShow, setPersonsToShow] = useState([])
-  const[showAll, setShowAll]=useState(true)
-
+  const [showAll, setShowAll] = useState(true)
 
   const handleNameChange = (event) => {
     //console.log(event.target.value)
@@ -35,7 +34,7 @@ const App = () => {
     setFilter(search)
     console.log("search: ", search)
     search ? setPersonsToShow(persons.filter((person) => person.name.charAt(0) === search.charAt(0))) : setPersonsToShow(persons)
-    search? setShowAll(false):setShowAll(true)
+    search ? setShowAll(false) : setShowAll(true)
   }
 
   const nameObject = {
@@ -70,6 +69,5 @@ const App = () => {
     </div>
   )
 }
-
 
 export default App
