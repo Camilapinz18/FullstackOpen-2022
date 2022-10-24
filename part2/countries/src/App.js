@@ -1,46 +1,36 @@
 import FilterForm from './Components/FilterForm'
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Countries from './Components/Countries';
 
 function App() {
 
-  const[countries, setCountries]=useState([])
+  const [countries, setCountries] = useState([])
   const [filter, setFilter] = useState('')
-  const [countriesToShow, setCountriesToShow]=useState([])
+  const [countriesToShow, setCountriesToShow] = useState([])
 
-
-  useEffect(()=>{
+  useEffect(() => {
     //console.log("Effect")
     axios
-    .get('http://localhost:3001/countries')
-    .then(response=>{
-      //console.log('promise fullfiled')
-      setCountries(response.data)
-    })
-  },[])
+      .get('http://localhost:3001/countries')
+      .then(response => {
+        //console.log('promise fullfiled')
+        setCountries(response.data)
+      })
+  }, [])
 
-  //const size=Object.keys(countries).length
-  //console.log("size:",size)
-
-
-
-  const handleFilter=(event)=>{
+  const handleFilter = (event) => {
     console.log(event.target.value)
     setFilter(event.target.value)
     console.log("Filter: ", filter)
 
-    filter? setCountriesToShow(countries.filter(country=> country.name.common.toLowerCase().includes(filter))):setCountriesToShow(countries)
-    //TODO: cambiar includes
+    filter ? setCountriesToShow(countries.filter(country => country.name.common.toLowerCase().includes(filter))) : setCountriesToShow(countries)
   }
-
-  
-
 
   return (
     <div>
       <FilterForm filter={filter} handleFilter={handleFilter}></FilterForm>
-      <Countries countriesToShow={countriesToShow}/>
+      <Countries countriesToShow={countriesToShow} />
     </div>
   );
 }

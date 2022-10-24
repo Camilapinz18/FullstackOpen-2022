@@ -1,16 +1,21 @@
 import React from "react"
-import CountryDetail from './CountryDetail'
 
-const Country = ({ temp, detail }) => {
+const Country = ({ temp, country }) => {
   return (
     <div>
-      <li>{detail.name}</li>
+      {temp === 1 ?
+        <div>
+          <h1>{country.name.common}</h1>
+          <h4>Capital: {country.capital}</h4>
+          <h4>Area: {country.area}</h4>
+          <h2>Languages:</h2>
+          <ul>{Object.values(country.languages).map(value => <li key={value}>{value}</li>)}</ul>
+          <img src={country.flags.png} alt="flag" />
+        </div>
+        : <li>{country.name.common}</li>}
 
-      <CountryDetail detail={detail.name} />
-      <CountryDetail detail={detail.capital} />
       {console.log("temp:", temp)}
     </div>
-
   )
 }
 
