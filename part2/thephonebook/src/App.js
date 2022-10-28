@@ -1,8 +1,9 @@
 import axios from "axios";
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import Filter from "./Components/Filter";
 import PersonForm from './Components/PersonForm'
 import Persons from './Components/Persons'
+import server from "./Services/server";
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -12,19 +13,17 @@ const App = () => {
   const [personsToShow, setPersonsToShow] = useState([])
   const [showAll, setShowAll] = useState(true)
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log("effect")
-    axios
-    .get('http://localhost:3001/persons')
-    .then(response=>{
-      console.log("promise fullfilled")
-      setPersons(response.data)
-    })
-  },[])
+    server
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
+        console.log("promise fullfilled")
+      })
+  }, [])
 
-  console.log("Persons: ",persons.length)
-
-
+  console.log("Persons: ", persons.length)
 
   const handleNameChange = (event) => {
     //console.log(event.target.value)
@@ -60,9 +59,15 @@ const App = () => {
     //El nombre debe compararse con los nombres ya almacenados en persons:
     //Recorre persons, y convierte cada valor en un JSON y lo compara con el newName convertido a JSON tambien
     duplicated = persons.find(person => (JSON.stringify(person.name) === JSON.stringify(nameObject.name)))
-    duplicated ? alert(`${newName} is already added to phonebook`) : setPersons(persons.concat(nameObject))
-    setNewName('');
-    setNewNumber('');
+    duplicated ? alert(`${newName} is already added to phonebook`) 
+    :
+    server
+      .create(nameObject)
+      .then(returnedPerson => {
+        setPersons((persons.concat(returnedPerson)))
+        setNewName('');
+        setNewNumber('');
+      })
   }
 
   return (
