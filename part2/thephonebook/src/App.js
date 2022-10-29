@@ -1,9 +1,10 @@
-import axios from "axios";
 import { useState, useEffect } from "react";
 import Filter from "./Components/Filter";
 import PersonForm from './Components/PersonForm'
 import Persons from './Components/Persons'
 import server from "./Services/server";
+import './index.css'
+import Notification from "./Components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -12,6 +13,7 @@ const App = () => {
   const [filter, setFilter] = useState('')
   const [personsToShow, setPersonsToShow] = useState([])
   const [showAll, setShowAll] = useState(true)
+  const [message, setMessage] = useState(null)
 
   useEffect(() => {
     console.log("effect")
@@ -24,9 +26,7 @@ const App = () => {
       })
   }, [])
 
-
   console.log("Persons: ", persons.length)
-
 
   const handleNameChange = (event) => {
     //console.log(event.target.value)
@@ -79,41 +79,50 @@ const App = () => {
               setPersons(persons.map(person => person.id !== duplicatedPerson.id ? person : updatedPerson))
               setNewName('');
               setNewNumber('');
+              setMessage(`${newName} number has changed`.toUpperCase())
+              console.log("Message:", message)
+              setTimeout(() => { setMessage(null) }, 3000)
+              console.log("Message:", message)
             })
           :
-console.log("remains equal")
+          console.log("remains equal")
       :
-server
-  .create(nameObject)
-  .then(returnedPerson => {
-    setPersons((persons.concat(returnedPerson)))
-    setNewName('');
-    setNewNumber('');
-  })
+      server
+        .create(nameObject)
+        .then(returnedPerson => {
+          setPersons((persons.concat(returnedPerson)))
+          setMessage(`${newName} created`.toUpperCase())
+          console.log("Message:", message)
+          setTimeout(() => { setMessage(null) }, 3000)
+          console.log("Message:", message)
+          setNewName('');
+          setNewNumber('');
+        })
   }
 
-const deletePerson = (id, name) => {
-  window.confirm(`Delete ${name}?`) ?
-    server
-      .remove(id)
-      .then(response => {
-        setPersons(persons.filter(person => person.id !== id))
-      }
-      )
-    :
-    console.log(persons)
-}
+  const deletePerson = (id, name) => {
+    window.confirm(`Delete ${name}?`) ?
+      server
+        .remove(id)
+        .then(response => {
+          setPersons(persons.filter(person => person.id !== id))
+        }
+        )
+      :
+      console.log(persons)
+  }
 
-return (
-  <div>
-    <h2>Phonebook</h2>
-    <Filter filter={filter} handleFilter={handleFilter} />
-    <h3>Add a new</h3>
-    <PersonForm addPerson={addPerson} newName={newName} newNumber={newNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}></PersonForm>
-    <h3>Numbers</h3>
-    {showAll ? <Persons persons={persons} deletePerson={deletePerson} /> : <Persons persons={personsToShow} />}
-  </div>
-)
+  return (
+    <div>
+      <h1>Phonebook</h1>
+      <Notification message={message} />
+      <Filter filter={filter} handleFilter={handleFilter} />
+      <h3>Add a new</h3>
+      <PersonForm addPerson={addPerson} newName={newName} newNumber={newNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}></PersonForm>
+      <h3>Numbers</h3>
+      {showAll ? <Persons persons={persons} deletePerson={deletePerson} message={message} /> : <Persons persons={personsToShow} />}
+    </div>
+  )
 }
 
 export default App

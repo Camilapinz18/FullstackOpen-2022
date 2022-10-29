@@ -1,5 +1,4 @@
 import React from "react"
-import server from "../Services/server"
 
 const Person = ({ id, name, number, deletePerson }) => {
 
