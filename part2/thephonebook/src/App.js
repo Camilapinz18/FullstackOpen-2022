@@ -46,7 +46,7 @@ const App = () => {
     search ? setShowAll(false) : setShowAll(true)
   }
 
-  const nameObject = {
+  let nameObject = {
     name: newName.toUpperCase(),
     number: newNumber
   }
@@ -55,46 +55,65 @@ const App = () => {
     event.preventDefault()
     console.log('button clickd', event.target)
 
-    let duplicated = {
-      name: ''
+    let duplicatedPerson = {
+      id: '',
+      name: '',
+      number: ''
     }
 
     //El nombre debe compararse con los nombres ya almacenados en persons:
     //Recorre persons, y convierte cada valor en un JSON y lo compara con el newName convertido a JSON tambien
-    duplicated = persons.find(person => (JSON.stringify(person.name) === JSON.stringify(nameObject.name)))
-    duplicated ? alert(`${newName} is already added to phonebook`)
+    duplicatedPerson = persons.find(person => (JSON.stringify(person.name) === JSON.stringify(nameObject.name)))
+
+    const changedPerson = { ...duplicatedPerson, number: newNumber }
+    console.log(changedPerson.id)
+    duplicatedPerson ?
+
+      duplicatedPerson.number === newNumber ?
+        alert(`${newName} is already added to phonebook`)
+        :
+        window.confirm(`${newName} is already added to phonebook. Replace the old number with the new one?`) ?
+          server
+            .update(changedPerson.id, changedPerson)
+            .then(updatedPerson => {
+              setPersons(persons.map(person => person.id !== duplicatedPerson.id ? person : updatedPerson))
+              setNewName('');
+              setNewNumber('');
+            })
+          :
+console.log("remains equal")
       :
-      server
-        .create(nameObject)
-        .then(returnedPerson => {
-          setPersons((persons.concat(returnedPerson)))
-          setNewName('');
-          setNewNumber('');
-        })
+server
+  .create(nameObject)
+  .then(returnedPerson => {
+    setPersons((persons.concat(returnedPerson)))
+    setNewName('');
+    setNewNumber('');
+  })
   }
 
-  const deletePerson = (id, name) => {
-    window.confirm(`Delete ${name}?`) ?
-      server
-        .remove(id)
-        .then(response => {
-          setPersons(persons.filter(person => person.id !== id))
-        }
-        )
-      :
-      console.log(persons)
-  }
+const deletePerson = (id, name) => {
+  window.confirm(`Delete ${name}?`) ?
+    server
+      .remove(id)
+      .then(response => {
+        setPersons(persons.filter(person => person.id !== id))
+      }
+      )
+    :
+    console.log(persons)
+}
 
-  return (
-    <div>
-      <h2>Phonebook</h2>
-      <Filter filter={filter} handleFilter={handleFilter} />
-      <h3>Add a new</h3>
-      <PersonForm addPerson={addPerson} newName={newName} newNumber={newNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}></PersonForm>
-      <h3>Numbers</h3>
-      {showAll ? <Persons persons={persons} deletePerson={deletePerson} /> : <Persons persons={personsToShow} />}
-    </div>
-  )
+return (
+  <div>
+    <h2>Phonebook</h2>
+    <Filter filter={filter} handleFilter={handleFilter} />
+    <h3>Add a new</h3>
+    <PersonForm addPerson={addPerson} newName={newName} newNumber={newNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}></PersonForm>
+    <h3>Numbers</h3>
+    {showAll ? <Persons persons={persons} deletePerson={deletePerson} /> : <Persons persons={personsToShow} />}
+  </div>
+)
 }
 
 export default App
