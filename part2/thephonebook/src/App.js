@@ -19,11 +19,14 @@ const App = () => {
       .getAll()
       .then(initialPersons => {
         setPersons(initialPersons)
-        console.log("promise fullfilled")
+        console.log(initialPersons)
+
       })
   }, [])
 
+
   console.log("Persons: ", persons.length)
+
 
   const handleNameChange = (event) => {
     //console.log(event.target.value)
@@ -59,15 +62,27 @@ const App = () => {
     //El nombre debe compararse con los nombres ya almacenados en persons:
     //Recorre persons, y convierte cada valor en un JSON y lo compara con el newName convertido a JSON tambien
     duplicated = persons.find(person => (JSON.stringify(person.name) === JSON.stringify(nameObject.name)))
-    duplicated ? alert(`${newName} is already added to phonebook`) 
-    :
-    server
-      .create(nameObject)
-      .then(returnedPerson => {
-        setPersons((persons.concat(returnedPerson)))
-        setNewName('');
-        setNewNumber('');
-      })
+    duplicated ? alert(`${newName} is already added to phonebook`)
+      :
+      server
+        .create(nameObject)
+        .then(returnedPerson => {
+          setPersons((persons.concat(returnedPerson)))
+          setNewName('');
+          setNewNumber('');
+        })
+  }
+
+  const deletePerson = (id, name) => {
+    window.confirm(`Delete ${name}?`) ?
+      server
+        .remove(id)
+        .then(response => {
+          setPersons(persons.filter(person => person.id !== id))
+        }
+        )
+      :
+      console.log(persons)
   }
 
   return (
@@ -77,7 +92,7 @@ const App = () => {
       <h3>Add a new</h3>
       <PersonForm addPerson={addPerson} newName={newName} newNumber={newNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}></PersonForm>
       <h3>Numbers</h3>
-      {showAll ? <Persons persons={persons} /> : <Persons persons={personsToShow} />}
+      {showAll ? <Persons persons={persons} deletePerson={deletePerson} /> : <Persons persons={personsToShow} />}
     </div>
   )
 }
