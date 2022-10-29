@@ -13,7 +13,8 @@ const App = () => {
   const [filter, setFilter] = useState('')
   const [personsToShow, setPersonsToShow] = useState([])
   const [showAll, setShowAll] = useState(true)
-  const [message, setMessage] = useState(null)
+  const [infoMessage, setInfoMessage] = useState(null)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     console.log("effect")
@@ -21,12 +22,11 @@ const App = () => {
       .getAll()
       .then(initialPersons => {
         setPersons(initialPersons)
-        console.log(initialPersons)
-
+        //console.log(initialPersons)
       })
   }, [])
 
-  console.log("Persons: ", persons.length)
+  //console.log("Persons: ", persons.length)
 
   const handleNameChange = (event) => {
     //console.log(event.target.value)
@@ -51,6 +51,11 @@ const App = () => {
     number: newNumber
   }
 
+  let messageObject = {
+    id: "",
+    message: ""
+  }
+
   const addPerson = (event) => {
     event.preventDefault()
     console.log('button clickd', event.target)
@@ -60,6 +65,8 @@ const App = () => {
       name: '',
       number: ''
     }
+
+
 
     //El nombre debe compararse con los nombres ya almacenados en persons:
     //Recorre persons, y convierte cada valor en un JSON y lo compara con el newName convertido a JSON tambien
@@ -71,7 +78,7 @@ const App = () => {
 
       duplicatedPerson.number === newNumber ?
         alert(`${newName} is already added to phonebook`)
-        :
+        ://Modify number:
         window.confirm(`${newName} is already added to phonebook. Replace the old number with the new one?`) ?
           server
             .update(changedPerson.id, changedPerson)
@@ -79,22 +86,34 @@ const App = () => {
               setPersons(persons.map(person => person.id !== duplicatedPerson.id ? person : updatedPerson))
               setNewName('');
               setNewNumber('');
-              setMessage(`${newName} number has changed`.toUpperCase())
-              console.log("Message:", message)
-              setTimeout(() => { setMessage(null) }, 3000)
-              console.log("Message:", message)
+              setInfoMessage({
+                message: `${newName} number has changed`.toUpperCase(),
+                id: "successful"
+              })
+              console.log("Message:", infoMessage)
+              setTimeout(() => { setInfoMessage(null) }, 3000)
+              console.log("Message:", infoMessage)
+            })
+            .catch(notify => {
+              setInfoMessage({
+                message: `Information of ${newName} has already been removed from server`.toUpperCase(),
+                id: "unsuccessful"
+              })
+              setTimeout(() => { setInfoMessage(null) }, 3000)
             })
           :
           console.log("remains equal")
-      :
+      ://Add new person:
       server
         .create(nameObject)
         .then(returnedPerson => {
           setPersons((persons.concat(returnedPerson)))
-          setMessage(`${newName} created`.toUpperCase())
-          console.log("Message:", message)
-          setTimeout(() => { setMessage(null) }, 3000)
-          console.log("Message:", message)
+          setInfoMessage({
+            message: `${newName} created`.toUpperCase(),
+            id: "successful"
+          })
+
+          setTimeout(() => { setInfoMessage(null) }, 3000)
           setNewName('');
           setNewNumber('');
         })
@@ -115,12 +134,14 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-      <Notification message={message} />
+      <Notification message={infoMessage}/>
+      {/*console.log("idRENDER", messageObject.id)*/}
+      {console.log("messageRENDER", infoMessage)}
       <Filter filter={filter} handleFilter={handleFilter} />
       <h3>Add a new</h3>
       <PersonForm addPerson={addPerson} newName={newName} newNumber={newNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}></PersonForm>
       <h3>Numbers</h3>
-      {showAll ? <Persons persons={persons} deletePerson={deletePerson} message={message} /> : <Persons persons={personsToShow} />}
+      {showAll ? <Persons persons={persons} deletePerson={deletePerson} message={infoMessage} /> : <Persons persons={personsToShow} />}
     </div>
   )
 }
