@@ -80,7 +80,7 @@ app.post('/api/persons', (request, response) => {
   }
 
   const name=persons.find(name=> name.name === person.name)
-  //console.log(name)
+  console.log(name)
   if(name){
     return response.status(400).json({
       error: 'Name must be unique'
