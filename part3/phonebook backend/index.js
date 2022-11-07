@@ -1,5 +1,11 @@
 const express = require('express')
+const morgan=require('morgan')
 const app = express()
+
+const PORT = 3001
+app.listen(PORT)
+
+app.use(morgan('tiny'))
 
 let persons =
   [
@@ -44,6 +50,8 @@ app.get('/info', (request, response) => {
 
 app.get('/api/persons', (request, response) => {
   response.json(persons)
+
+  morgan(':method :url :status :res[content-length] - :response-time ms');
 })
 
 app.get('/api/persons/:id', (request, response) => {
@@ -97,5 +105,3 @@ app.delete('/api/persons/:id', (request, response) => {
 }
 )
 
-const PORT = 3001
-app.listen(PORT)
