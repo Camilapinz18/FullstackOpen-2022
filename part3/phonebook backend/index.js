@@ -5,7 +5,12 @@ const app = express()
 const PORT = 3001
 app.listen(PORT)
 
-app.use(morgan('tiny'))
+app.use(express.json())
+
+morgan.token('body', req => {
+  return JSON.stringify(req.body)
+})
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 let persons =
   [
@@ -65,8 +70,6 @@ app.get('/api/persons/:id', (request, response) => {
   }
 })
 
-app.use(express.json())
-
 const generateId = () => {
   min = 0
   max = 500
@@ -97,6 +100,13 @@ app.post('/api/persons', (request, response) => {
   persons = persons.concat(person)
   response.json(person)
 })
+
+
+
+
+  
+
+
 
 app.delete('/api/persons/:id', (request, response) => {
   const id = Number(request.params.id)
