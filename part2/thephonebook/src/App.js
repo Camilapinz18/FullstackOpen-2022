@@ -136,7 +136,7 @@ const App = () => {
       <h1>Phonebook</h1>
       <Notification message={infoMessage}/>
       {/*console.log("idRENDER", messageObject.id)*/}
-      {console.log("messageRENDER", infoMessage)}
+      {/*console.log("messageRENDER", infoMessage)*/}
       <Filter filter={filter} handleFilter={handleFilter} />
       <h3>Add a new</h3>
       <PersonForm addPerson={addPerson} newName={newName} newNumber={newNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}></PersonForm>
