@@ -22,19 +22,19 @@ const App = () => {
       .getAll()
       .then(initialPersons => {
         setPersons(initialPersons)
-        //console.log(initialPersons)
+        console.log(initialPersons)
       })
   }, [])
 
   //console.log("Persons: ", persons.length)
 
   const handleNameChange = (event) => {
-    //console.log(event.target.value)
+    console.log(event.target.value)
     setNewName(event.target.value)
   }
 
   const handleNumberChange = (event) => {
-    //console.log('Number: ', event.target.value)
+    console.log('Number: ', event.target.value)
     setNewNumber(event.target.value)
   }
 
@@ -65,8 +65,6 @@ const App = () => {
       name: '',
       number: ''
     }
-
-
 
     //El nombre debe compararse con los nombres ya almacenados en persons:
     //Recorre persons, y convierte cada valor en un JSON y lo compara con el newName convertido a JSON tambien
