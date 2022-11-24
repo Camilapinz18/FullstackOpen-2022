@@ -39,8 +39,6 @@ app.get("/api/persons", (request, response) => {
   });
 });
   
-
-
 app.get('/api/persons/:id', (request, response) => {
   Contact.findById(request.params.id).then(contact=>{
     if (contact) {
@@ -51,35 +49,31 @@ app.get('/api/persons/:id', (request, response) => {
   })
 })
 
-app.post('/api/persons', (request, response) => {
-  const body = request.body
-  console.log("bodu", body)
-
-  if (body.content === undefined) {
-    return response.status(400).json({ error: 'content missing' })
-  }
+app.post('/api/persons/', (request, response) => {
+  const data=request.body
+  console.log("req:",data)
 
   const contact = new Contact(
     {
-      name: body.name,
-      phone: body.phone,
+      name: data.name,
+      phone: data.number,
     }
   )
 
-  /*const name=persons.find(name=> name.name === person.name)
-if(name){
-  return response.status(400).json({
-    error: 'Name must be unique'
-  })
-}*/
-
-  persons = persons.concat(contact)
-  contact.save().then(savedContact => {
-    response.json(persons)
-  })
+  if (data === undefined) {
+    return response.status(400).json({ error: 'content missing' })
+  } else{
+    contact.save().then(savedContact => {
+      response.json(savedContact)
+    })
+  }
 })
 
 app.delete('/api/persons/:id', (request, response) => {
+
+  /*Contact.findById(request.params.id).then(contact=>{
+
+  })*/
   const id = Number(request.params.id)
   persons = persons.filter(person => person.id !== id)
   response.status(204).end()

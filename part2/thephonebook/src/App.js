@@ -58,7 +58,7 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
-    console.log('button clickd', event.target)
+    //console.log('button clickd', event.target)
 
     let duplicatedPerson = {
       id: '',
@@ -68,10 +68,10 @@ const App = () => {
 
     //El nombre debe compararse con los nombres ya almacenados en persons:
     //Recorre persons, y convierte cada valor en un JSON y lo compara con el newName convertido a JSON tambien
-    duplicatedPerson = persons.find(person => (JSON.stringify(person.name) === JSON.stringify(nameObject.name)))
+    /*duplicatedPerson = persons.find(person => (JSON.stringify(person.name) === JSON.stringify(nameObject.name)))
 
     const changedPerson = { ...duplicatedPerson, number: newNumber }
-    console.log(changedPerson.id)
+    //console.log(changedPerson.id)
     duplicatedPerson ?
 
       duplicatedPerson.number === newNumber ?
@@ -101,7 +101,7 @@ const App = () => {
             })
           :
           console.log("remains equal")
-      ://Add new person:
+      ://Add new person:*/
       server
         .create(nameObject)
         .then(returnedPerson => {
