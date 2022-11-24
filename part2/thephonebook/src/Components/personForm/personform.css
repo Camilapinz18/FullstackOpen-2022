@@ -1,0 +1,17 @@
+.form_container{
+    width: 80%;
+}
+
+.form_container h3{
+    line-height: 40px;
+}
+
+.btn_add{
+    margin: 20px auto;
+}
+
+.btn_add:hover{
+    background-color: #1E1E1E;
+    border-color: salmon;
+    color: salmon;
+}

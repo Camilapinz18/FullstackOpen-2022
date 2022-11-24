@@ -1,5 +1,5 @@
 import React from "react"
-import Person from './Person'
+import Person from './person/Person'
 const Persons = ({ persons, deletePerson}) => {
   return (
     <div>

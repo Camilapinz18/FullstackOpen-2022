@@ -70,14 +70,23 @@ app.post('/api/persons/', (request, response) => {
 })
 
 app.delete('/api/persons/:id', (request, response) => {
-
-  /*Contact.findById(request.params.id).then(contact=>{
-
-  })*/
-  const id = Number(request.params.id)
-  persons = persons.filter(person => person.id !== id)
-  response.status(204).end()
+  Contact.findByIdAndRemove(request.params.id)
+  .then(result=>{
+    response.status(204).end()
+  })
+  .catch(error=>next(error))
 })
+
+const errorHandler=(error, req,res,next)=>{
+  console.error(error.message)
+
+  if(error.name==='Cast error'){
+    return res.status(400).send({error:'malformated id'})
+  }
+  next(error)
+}
+
+app.use(errorHandler)
 
 
 

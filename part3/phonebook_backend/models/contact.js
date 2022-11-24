@@ -1,6 +1,7 @@
 const mongoose=require('mongoose')
 require('dotenv').config()
-const url=process.env.MONGODB_URI
+//const url=process.env.MONGODB_URI
+const url="mongodb+srv://admin:8183@fso2022.2bqdt3g.mongodb.net/phonebook?retryWrites=true&w=majority"
 
 console.log("connecting to MongoDB...")
 

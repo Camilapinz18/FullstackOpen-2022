@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import Filter from "./Components/Filter";
-import PersonForm from './Components/PersonForm'
+import Filter from "./Components/Filter/Filter";
+import PersonForm from './Components/personForm/PersonForm'
 import Persons from './Components/Persons'
 import server from "./Services/server";
 import './index.css'
@@ -130,15 +130,13 @@ const App = () => {
   }
 
   return (
-    <div>
+    <div className="phonebook_container">
       <h1>Phonebook</h1>
       <Notification message={infoMessage}/>
-      {/*console.log("idRENDER", messageObject.id)*/}
-      {/*console.log("messageRENDER", infoMessage)*/}
       <Filter filter={filter} handleFilter={handleFilter} />
-      <h3>Add a new</h3>
+      <h2>Add a new</h2>
       <PersonForm addPerson={addPerson} newName={newName} newNumber={newNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}></PersonForm>
-      <h3>Numbers</h3>
+      <h2>Numbers</h2>
       {showAll ? <Persons persons={persons} deletePerson={deletePerson} message={infoMessage} /> : <Persons persons={personsToShow} />}
     </div>
   )
