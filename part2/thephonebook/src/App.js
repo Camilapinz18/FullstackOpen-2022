@@ -68,9 +68,9 @@ const App = () => {
 
     //El nombre debe compararse con los nombres ya almacenados en persons:
     //Recorre persons, y convierte cada valor en un JSON y lo compara con el newName convertido a JSON tambien
-    /*duplicatedPerson = persons.find(person => (JSON.stringify(person.name) === JSON.stringify(nameObject.name)))
+    duplicatedPerson = persons.find(person => (JSON.stringify(person.name) === JSON.stringify(nameObject.name)))
 
-    const changedPerson = { ...duplicatedPerson, number: newNumber }
+    const changedPerson = { ...duplicatedPerson, phone: newNumber }
     //console.log(changedPerson.id)
     duplicatedPerson ?
 
@@ -128,6 +128,8 @@ const App = () => {
       :
       console.log(persons)
   }
+
+
 
   return (
     <div className="phonebook_container">

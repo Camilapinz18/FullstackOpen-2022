@@ -38,9 +38,9 @@ app.get("/api/persons", (request, response) => {
     response.json(contact);
   });
 });
-  
+
 app.get('/api/persons/:id', (request, response) => {
-  Contact.findById(request.params.id).then(contact=>{
+  Contact.findById(request.params.id).then(contact => {
     if (contact) {
       response.json(contact)
     } else {
@@ -50,8 +50,9 @@ app.get('/api/persons/:id', (request, response) => {
 })
 
 app.post('/api/persons/', (request, response) => {
-  const data=request.body
-  console.log("req:",data)
+
+  const data = request.body
+  console.log("req:", data)
 
   const contact = new Contact(
     {
@@ -62,26 +63,42 @@ app.post('/api/persons/', (request, response) => {
 
   if (data === undefined) {
     return response.status(400).json({ error: 'content missing' })
-  } else{
+  } else {
     contact.save().then(savedContact => {
       response.json(savedContact)
     })
   }
 })
 
-app.delete('/api/persons/:id', (request, response) => {
-  Contact.findByIdAndRemove(request.params.id)
-  .then(result=>{
-    response.status(204).end()
-  })
-  .catch(error=>next(error))
+app.put('/api/persons/:id', (request, response,next) => {
+  const newNumber = request.body.phone
+  console.log("newNUmber:", newNumber)
+
+  const newUpdate={
+    name:request.body.name,
+    phone:newNumber
+  }
+  
+    Contact.findByIdAndUpdate(request.params.id, newUpdate,{new:true})
+    .then(updatePerson => {
+      response.json(updatePerson)
+    })
+    .catch(error => next(error))
 })
 
-const errorHandler=(error, req,res,next)=>{
+app.delete('/api/persons/:id', (request, response) => {
+  Contact.findByIdAndRemove(request.params.id)
+    .then(result => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
+})
+
+const errorHandler = (error, req, res, next) => {
   console.error(error.message)
 
-  if(error.name==='Cast error'){
-    return res.status(400).send({error:'malformated id'})
+  if (error.name === 'Cast error') {
+    return res.status(400).send({ error: 'malformated id' })
   }
   next(error)
 }
