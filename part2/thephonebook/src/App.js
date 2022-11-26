@@ -66,6 +66,16 @@ const App = () => {
       number: ''
     }
 
+    //Verificare las longitud del nombre: Min 3:
+    if(newName.length <3){
+      console.log("debe ser mayor a 3")
+      setInfoMessage({
+        message: `Person validation failed: name: Path 'name' ('${newName}') is shorter than the minimum allowed lenght(3)`,
+        id: "unsuccessful"
+      })
+      setTimeout(() => { setInfoMessage(null) }, 3000)
+    }
+
     //El nombre debe compararse con los nombres ya almacenados en persons:
     //Recorre persons, y convierte cada valor en un JSON y lo compara con el newName convertido a JSON tambien
     duplicatedPerson = persons.find(person => (JSON.stringify(person.name) === JSON.stringify(nameObject.name)))

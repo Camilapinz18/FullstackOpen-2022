@@ -10,7 +10,7 @@
 
 .unsuccessful{
     color: red;
-    background: lightcoral;
+    background: rgb(255, 190, 190);
     font-size: 20px;
     border-style: solid;
     border-radius: 5px;

@@ -49,8 +49,7 @@ app.get('/api/persons/:id', (request, response) => {
   })
 })
 
-app.post('/api/persons/', (request, response) => {
-
+app.post('/api/persons/', (request, response, next) => {
   const data = request.body
   console.log("req:", data)
 
@@ -60,33 +59,29 @@ app.post('/api/persons/', (request, response) => {
       phone: data.number,
     }
   )
+  contact.save().then(savedContact => {
+    response.json(savedContact)
+  }).catch(error => next(error))
+}
+)
 
-  if (data === undefined) {
-    return response.status(400).json({ error: 'content missing' })
-  } else {
-    contact.save().then(savedContact => {
-      response.json(savedContact)
-    })
-  }
-})
-
-app.put('/api/persons/:id', (request, response,next) => {
+app.put('/api/persons/:id', (request, response, next) => {
   const newNumber = request.body.phone
   console.log("newNUmber:", newNumber)
 
-  const newUpdate={
-    name:request.body.name,
-    phone:newNumber
+  const newUpdate = {
+    name: request.body.name,
+    phone: newNumber
   }
-  
-    Contact.findByIdAndUpdate(request.params.id, newUpdate,{new:true})
+
+  Contact.findByIdAndUpdate(request.params.id, newUpdate, { new: true })
     .then(updatePerson => {
       response.json(updatePerson)
     })
     .catch(error => next(error))
 })
 
-app.delete('/api/persons/:id', (request, response) => {
+app.delete('/api/persons/:id', (request, response, next) => {
   Contact.findByIdAndRemove(request.params.id)
     .then(result => {
       response.status(204).end()
@@ -99,6 +94,8 @@ const errorHandler = (error, req, res, next) => {
 
   if (error.name === 'Cast error') {
     return res.status(400).send({ error: 'malformated id' })
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
   }
   next(error)
 }
