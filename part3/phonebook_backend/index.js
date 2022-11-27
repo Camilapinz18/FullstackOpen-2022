@@ -7,6 +7,7 @@ app.use(cors())
 app.use(express.static('build'))
 require('dotenv').config()
 
+// eslint-disable-next-line no-undef
 const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
@@ -19,8 +20,8 @@ morgan.token('body', req => {
 })
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
-
 /************************************************************************************************** */
+
 app.get('/info', (request, response) => {
   Contact.find({})
     .then(contact => {
@@ -32,12 +33,12 @@ app.get('/info', (request, response) => {
     })
 })
 
-app.get("/api/persons", (request, response) => {
+app.get('/api/persons', (request, response) => {
   Contact.find({}).then((contact) => {
-    morgan(':method :url :status :res[content-length] - :response-time ms');
-    response.json(contact);
-  });
-});
+    morgan(':method :url :status :res[content-length] - :response-time ms')
+    response.json(contact)
+  })
+})
 
 app.get('/api/persons/:id', (request, response) => {
   Contact.findById(request.params.id).then(contact => {
@@ -51,7 +52,7 @@ app.get('/api/persons/:id', (request, response) => {
 
 app.post('/api/persons/', (request, response, next) => {
   const data = request.body
-  console.log("req:", data)
+  console.log('req:', data)
 
   const contact = new Contact(
     {
@@ -59,7 +60,9 @@ app.post('/api/persons/', (request, response, next) => {
       phone: data.number,
     }
   )
+
   contact.save().then(savedContact => {
+
     response.json(savedContact)
   }).catch(error => next(error))
 }
@@ -67,14 +70,14 @@ app.post('/api/persons/', (request, response, next) => {
 
 app.put('/api/persons/:id', (request, response, next) => {
   const newNumber = request.body.phone
-  console.log("newNUmber:", newNumber)
+  console.log('newNUmber:', newNumber)
 
   const newUpdate = {
     name: request.body.name,
     phone: newNumber
   }
 
-  Contact.findByIdAndUpdate(request.params.id, newUpdate, { new: true })
+  Contact.findByIdAndUpdate(request.params.id, newUpdate, { runValidators: true })
     .then(updatePerson => {
       response.json(updatePerson)
     })
@@ -83,6 +86,7 @@ app.put('/api/persons/:id', (request, response, next) => {
 
 app.delete('/api/persons/:id', (request, response, next) => {
   Contact.findByIdAndRemove(request.params.id)
+    // eslint-disable-next-line no-unused-vars
     .then(result => {
       response.status(204).end()
     })
@@ -91,16 +95,20 @@ app.delete('/api/persons/:id', (request, response, next) => {
 
 const errorHandler = (error, req, res, next) => {
   console.error(error.message)
-
   if (error.name === 'Cast error') {
     return res.status(400).send({ error: 'malformated id' })
   } else if (error.name === 'ValidationError') {
-    return response.status(400).json({ error: error.message })
+    return res.status(400).json({ error: error.message })
   }
   next(error)
 }
 
 app.use(errorHandler)
+
+
+
+
+
 
 
 

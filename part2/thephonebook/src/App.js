@@ -14,7 +14,6 @@ const App = () => {
   const [personsToShow, setPersonsToShow] = useState([])
   const [showAll, setShowAll] = useState(true)
   const [infoMessage, setInfoMessage] = useState(null)
-  const [error, setError] = useState(null)
 
   useEffect(() => {
     console.log("effect")
@@ -22,11 +21,24 @@ const App = () => {
       .getAll()
       .then(initialPersons => {
         setPersons(initialPersons)
-        console.log(initialPersons)
       })
   }, [])
 
-  //console.log("Persons: ", persons.length)
+  useEffect(() => {
+    server
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
+      })
+    const timer = setTimeout(() => {
+      setInfoMessage(null);
+    }, 5000);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [infoMessage]);
+
+    //console.log("Persons: ", persons.length)
 
   const handleNameChange = (event) => {
     console.log(event.target.value)
@@ -51,32 +63,16 @@ const App = () => {
     number: newNumber
   }
 
-  let messageObject = {
-    id: "",
-    message: ""
-  }
-
   const addPerson = (event) => {
     event.preventDefault()
-    //console.log('button clickd', event.target)
-
+ 
     let duplicatedPerson = {
       id: '',
       name: '',
       number: ''
     }
 
-    //Verificare las longitud del nombre: Min 3:
-    if(newName.length <3){
-      console.log("debe ser mayor a 3")
-      setInfoMessage({
-        message: `Person validation failed: name: Path 'name' ('${newName}') is shorter than the minimum allowed lenght(3)`,
-        id: "unsuccessful"
-      })
-      setTimeout(() => { setInfoMessage(null) }, 3000)
-    }
-
-    //El nombre debe compararse con los nombres ya almacenados en persons:
+     //El nombre debe compararse con los nombres ya almacenados en persons:
     //Recorre persons, y convierte cada valor en un JSON y lo compara con el newName convertido a JSON tambien
     duplicatedPerson = persons.find(person => (JSON.stringify(person.name) === JSON.stringify(nameObject.name)))
 
@@ -84,14 +80,16 @@ const App = () => {
     //console.log(changedPerson.id)
     duplicatedPerson ?
 
-      duplicatedPerson.number === newNumber ?
+      duplicatedPerson.phone === newNumber ?
         alert(`${newName} is already added to phonebook`)
         ://Modify number:
         window.confirm(`${newName} is already added to phonebook. Replace the old number with the new one?`) ?
+             //Update person:
           server
             .update(changedPerson.id, changedPerson)
             .then(updatedPerson => {
-              setPersons(persons.map(person => person.id !== duplicatedPerson.id ? person : updatedPerson))
+              const updatedPersons=persons.map(person => person.id !== duplicatedPerson.id ? person : updatedPerson)
+              setPersons(updatedPersons)
               setNewName('');
               setNewNumber('');
               setInfoMessage({
@@ -102,12 +100,12 @@ const App = () => {
               setTimeout(() => { setInfoMessage(null) }, 3000)
               console.log("Message:", infoMessage)
             })
-            .catch(notify => {
+            .catch(error => {
               setInfoMessage({
-                message: `Information of ${newName} has already been removed from server`.toUpperCase(),
+                message: error.response.data.error,
                 id: "unsuccessful"
               })
-              setTimeout(() => { setInfoMessage(null) }, 3000)
+              
             })
           :
           console.log("remains equal")
@@ -119,11 +117,17 @@ const App = () => {
           setInfoMessage({
             message: `${newName} created`.toUpperCase(),
             id: "successful"
-          })
-
-          setTimeout(() => { setInfoMessage(null) }, 3000)
+          })         
           setNewName('');
           setNewNumber('');
+        })
+        .catch(error=>{
+          setInfoMessage(
+            {
+              message: error.response.data.error,
+              id: "unsuccessful"
+            }
+          )
         })
   }
 
@@ -139,15 +143,13 @@ const App = () => {
       console.log(persons)
   }
 
-
-
   return (
     <div className="phonebook_container">
       <h1>Phonebook</h1>
-      <Notification message={infoMessage}/>
       <Filter filter={filter} handleFilter={handleFilter} />
       <h2>Add a new</h2>
       <PersonForm addPerson={addPerson} newName={newName} newNumber={newNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange}></PersonForm>
+      <Notification message={infoMessage}/>
       <h2>Numbers</h2>
       {showAll ? <Persons persons={persons} deletePerson={deletePerson} message={infoMessage} /> : <Persons persons={personsToShow} />}
     </div>
