@@ -1,4 +1,4 @@
-const reverse = (String) => {
+/*const reverse = (String) => {
     return String
         .split('')
         .reverse()
@@ -10,10 +10,11 @@ const average = (array) => {
         return sum + item
     }
 
-    return array.reduce(reducer, 0) / array.length
+    return array.lenght === 0 ?
+        0 : array.reducer(reducer, 0) / array.lenght
 }
 
 module.exports = {
     reverse,
     average
-}
+}*/
